@@ -104,7 +104,7 @@
         </div>
         <div class="menu__item__input">
           <label for="client__group">{{ formsName.clientGroup }}</label>
-          <select class="select__multiple" name="select__multiple" id="client__group" size="2" required multiple>
+          <select class="select__multiple" name="select__multiple" id="client__group" size="3" required multiple v-multipleWithoutCtrl>
             <option 
               value="select__multiple" 
               v-for="(group, index) in clientGroup" 
@@ -282,6 +282,17 @@
 import { required, maxLength, helpers, numeric } from "vuelidate/lib/validators";
 import moment from 'moment';
 
+// This function removes hold ctrl when select element in multiple selector.
+function onSelect(element) {
+  element.preventDefault();
+  const select = element.currentTarget;
+  select.focus();
+  if (element.target.tagName === 'OPTION') {
+    element.target.selected = !element.target.selected;
+    select.dispatchEvent(new Event('change'));
+  }
+}
+
 const text = helpers.regex('text', /^[а-яё,a-zA-Z, " "]*$/i);
 const phone = helpers.regex('phone', /^((7)+([0-9]){10})$/);
 const index = helpers.regex('index', /^[0-9, " "]*$/);
@@ -299,7 +310,7 @@ export default {
       formsTitle: {
         client: "Клиент:",
         address: "Адрес проживания:",
-        document: "Сведения о документе, удостоверяющем личность:"
+        document: "Сведения о документе, удостоверяющем личность:",
       },
       formsName: {
         lastName: "Фамилия*:",
@@ -333,19 +344,19 @@ export default {
         dateFormat: "Дата должна быть в формате ДД.ММ.ГГГГ.",
       },
       clientGroup: [
-        { text: "VIP"},
-        { text: "Проблемные"},
-        {text: "ОМС"}
+        { text: "VIP" },
+        { text: "Проблемные" },
+        { text: "ОМС" }
       ],
       doctors: [
-        { text: "Иванов"},
-        { text: "Захаров"},
-        {text: "Чернышева"}
+        { text: "Иванов" },
+        { text: "Захаров" },
+        { text: "Чернышева" }
       ],
       documents: [
-        { text: "Паспорт"},
-        { text: "Свидетельство о рождении"},
-        {text: "Вод.удостоверение"}
+        { text: "Паспорт" },
+        { text: "Свидетельство о рождении" },
+        { text: "Вод.удостоверение" }
       ],
       // Input data for validation
       textRequiredForms: {
@@ -443,8 +454,12 @@ export default {
       }
     }
   },
-
- 
+  directives: {
+    multipleWithoutCtrl: {
+      bind: el => el.addEventListener('mousedown', onSelect),
+      unbind: el => el.removeEventListener('mousedown', onSelect),
+    }
+  },
   methods: {
     viewImage() {
       let imageName = this.image;
@@ -556,7 +571,6 @@ export default {
         color: red;
       }
     }
-    
   }
   @media(max-width: 700px) {
     form {
