@@ -533,6 +533,7 @@ export default {
         width: 25.5vw;
         height: 1.1vw;
         font-weight: 600;
+        font-size: 0.8vw;
       }
       select {
         font-size: 0.7vw;
@@ -541,7 +542,6 @@ export default {
         font-weight: 600;
       }
       .select__multiple {
-        // height: 2.1vw;
         border: 0.1vw solid black;
         border-radius: 0;
       }
