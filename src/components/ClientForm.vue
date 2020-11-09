@@ -2,7 +2,7 @@
   <div class="form">
     <img alt="Vue logo" v-bind:src="viewImage()" />
     <div class="form__title">{{ msg }}</div>
-    <form v-on:submit="someAction()">
+    <form v-on:submit="someAction()" id="create__client__form">
       <div class="menu__unit__input">
         <div class="menu__unit__title">{{ formsTitle.client }}</div>
         <div class="menu__item__input">
@@ -63,12 +63,12 @@
           <label for="birthday">{{ formsName.birthday }}</label>
           <input 
             id="birthday" 
-            type="text" 
+            type="date" 
             v-model.trim="$v.numericRequiredForms.birthday.$model"
             @blur="$v.numericRequiredForms.birthday.$touch()"
             />
           <div class="error" v-if="$v.numericRequiredForms.birthday.$error">
-              {{ validationErrors.dateFormat }}
+              {{ validationErrors.requiredInput }}
           </div>
         </div>
         <div class="menu__item__input">
@@ -260,27 +260,26 @@
           <label for="date__of__issue">{{ formsName.dateOfIssue }}</label>
           <input 
             id="date__of__issue" 
-            type="text" 
+            type="date" 
             v-model.trim="$v.numericRequiredForms.dateOfIssue.$model"
             @blur="$v.numericRequiredForms.dateOfIssue.$touch()"
             />
           <div class="error" v-if="$v.numericRequiredForms.dateOfIssue.$error">
-              {{ validationErrors.dateFormat }}
+              {{ validationErrors.requiredInput }}
           </div>
         </div>
-        <div class="submit">
-          <button type="submit" class="submit__button" :disabled="$v.$invalid">Отправить</button>
-          <div class="attention">* - ПОЛЯ ОБЯЗАТЕЛЬНЫЕ ДЛЯ ЗАПОЛНЕНИЯ</div>
-        </div>
+        
       </div>
     </form>
-    
+    <div class="submit">
+      <button type="submit" form="create__client__form" class="submit__button" :disabled="$v.$invalid">Отправить</button>
+      <div class="attention">* - ПОЛЯ ОБЯЗАТЕЛЬНЫЕ ДЛЯ ЗАПОЛНЕНИЯ</div>
+    </div>
   </div>
 </template>
 
 <script>
 import { required, maxLength, helpers, numeric } from "vuelidate/lib/validators";
-import moment from 'moment';
 
 // This function removes hold ctrl when select element in multiple selector.
 function onSelect(element) {
@@ -302,10 +301,10 @@ export default {
   props: {
     msg: String,
     
-  },
+  }, 
   data() {
     return {
-      image: "logo",
+      image: "logo2",
       // Information for forms
       formsTitle: {
         client: "Клиент:",
@@ -405,8 +404,7 @@ export default {
     },
     numericRequiredForms: {
       birthday: {
-        required,
-        validDate: val => moment(val, "DD.MM.YYYY", true).isValid(),
+        required
       },
       phoneNumber: {
         required,
@@ -415,7 +413,7 @@ export default {
       },
        dateOfIssue: {
         required,
-        validDate: val => moment(val, "DD.MM.YYYY", true).isValid(),
+        // validDate: val => moment(val, "DD.MM.YYYY", true).isValid(),
        }
     },
     textNonrequiredForms: {
@@ -477,6 +475,7 @@ export default {
   font-family: "Nunito Sans";
   src: url('~@/assets/fonts/NunitoSans-Regular.ttf') format('ttf'),
 }
+
 .form {
   display: flex;
   flex-direction: column;
@@ -484,8 +483,9 @@ export default {
   align-items: center;
   font-family: "Nunito Sans", sans-serif;
   img {
-    width: 17.19vw;
-    height: 7.8vw;
+    width: 13%;
+    height: 13%;
+    
   }
   .form__title {
     font-size: 1.5vw;
@@ -493,11 +493,18 @@ export default {
   form {
     display: flex;
     flex-direction: row;
-    margin-top: 2vw;
+    margin-top: 1.5vw;
   }
   .menu__unit__input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-right: 2vw;
     width: 30vw;
+    border: 0.1vw solid black;
+    border-radius: 1%;
+    padding: 0.5vw;
+    background-color: rgba(117, 117, 155, 0.404);
     .menu__unit__title {
       font-size: 1.1vw;
       margin-bottom: 1vw;
@@ -509,27 +516,6 @@ export default {
       input {
         width: 1vw;
         height: 1vw;
-      }
-    }
-    .submit {
-      margin-top: 10vw;
-      font-size: 0.8vw;
-      font-weight: 600;
-      button {
-        margin-bottom: 1vw;
-        width: 17vw;
-        height: 2.2vw;
-        font-size: 0.6vw;
-        text-align: center;
-        background-color: #119b15;
-        color: white;
-        opacity: 1;
-        &:hover {
-          opacity: 0.7;
-        }
-        &:disabled {
-          opacity: 0.5;
-        }
       }
     }
     &:nth-child(3) {
@@ -549,26 +535,56 @@ export default {
         height: 1.1vw;
         font-weight: 600;
         font-size: 0.8vw;
+        padding: 0.2vw;
       }
       select {
         font-size: 0.7vw;
         width: 26vw;
         outline: none;
         font-weight: 600;
+        padding: 0.2vw;
       }
       .select__multiple {
         border: 0.1vw solid black;
         border-radius: 0;
+        
       }
       .select__standart {
         height: 1.5vw;
         appearance: none;
         background: url('../assets/arrow.png') no-repeat right / 1.25vw 1.25vw;
+        background-color: white;
         border: 0.01vw solid black;
         border-radius: 0;
+     
       }
       .error {
-        color: red;
+        color: black;
+        background-color: red;
+        text-align: center;
+        width: 20vw;
+        align-self: center;
+      }
+    }
+  }
+  .submit {
+    margin-top: 1vw;
+    font-size: 0.8vw;
+    font-weight: 600;
+    button {
+      margin-bottom: 1vw;
+      width: 17vw;
+      height: 2.2vw;
+      font-size: 0.6vw;
+      text-align: center;
+      background-color: #119b15;
+      color: white;
+      opacity: 1;
+      &:hover {
+        opacity: 0.7;
+      }
+      &:disabled {
+        opacity: 0.5;
       }
     }
   }
@@ -577,11 +593,12 @@ export default {
       flex-direction: column;
       .menu__unit__input {
         margin: 0 0 2vw 5vw;
-        .submit {
-          margin: 3vw 0 0 4vw;
-          font-size: 0.8vw;
-        }
+        
       }
+    }
+    .submit {
+      margin: 1vw 0 0 4vw;
+      font-size: 0.8vw;
     }
   }
 }

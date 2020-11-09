@@ -16,7 +16,10 @@ export default {
 </script>
 
 <style>
-
+body {
+  background-color: rgba(223, 208, 208, 0.404);
+  
+}
 /* #app {
   
   font-family: "Nunito Sans", sans-serif;
